@@ -7,10 +7,8 @@ package controllers;
 
 import daos.AccountDAO;
 import daos.EmployeeDAO;
-import daos.GeneralDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,10 +28,11 @@ import tools.HibernateUtil;
 public class LoginServlet extends HttpServlet {
 
     private static String token;
-    private final EmployeeDAO<Employee> emdao = new EmployeeDAO<>(HibernateUtil.getSessionFactory(), Employee.class);
-    private final AccountDAO<Account> aadao = new AccountDAO<>(HibernateUtil.getSessionFactory(), Account.class);
+    private EmployeeDAO<Employee> emdao = new EmployeeDAO<>(HibernateUtil.getSessionFactory(), Employee.class);
+    private AccountDAO<Account> aadao = new AccountDAO<>(HibernateUtil.getSessionFactory(), Account.class);
 //    private final GeneralDAO<Account> adao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Account.class);
     private Employee employee;
+    private Account account;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -66,24 +65,14 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        token = request.getParameter("token");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        
-        
+         String id = request.getParameter("id");
+        //Verivikasi akun
+        // Account account = AccountDAO.getByToken(id);
         try {
-            Account account = aadao.getByToken(token);
+            Account account = aadao.getByToken(id);
             if (account != null) {
-                account = new Account(account.getId(), account.getPassword(), new Short("1"), account.getToken(), employee);
-                aadao.saveOrDelete(account, false);
-                out.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.4/sweetalert2.all.js'> </script>");
-                out.println("<script src= 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>");
-                out.println("<script src= 'https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>");
-                out.println("<script>");
-                out.println("$(document).ready(function(){");
-                out.println("swal ('Sukses !', 'Email berhasil diverifikasi!', 'success');");
-                out.println("});");
-                out.println("</script>");
+                account = new Account(account.getId(), account.getPassword(), new Short("1"), account.getToken(), new Employee(id));
+                aadao.saveOrDelete(account, true);
             }
         } catch (Exception e) {
         }
@@ -104,30 +93,24 @@ public class LoginServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        try {
+               try {
             employee = emdao.getByEmail(email);
             if (employee != null) {
-                Account a = aadao.getById(employee.getEmail());
-                if (BCrypt.checkpw(password, a.getPassword())) {
-                    
-                    out.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.4/sweetalert2.all.js'> </script>");
-                    out.println("<script src= 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>");
-                    out.println("<script src= 'https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>");
-                    out.println("<script>");
-                    out.println("$(document).ready(function(){");
-                    out.println("swal ('Sukses !', 'Berhasil login!', 'success');");
-                    out.println("});");
-                    out.println("</script>");
-                } else {
-                    out.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.4/sweetalert2.all.js'> </script>");
-                    out.println("<script src= 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>");
-                    out.println("<script src= 'https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>");
-                    out.println("<script>");
-                    out.println("$(document).ready(function(){");
-                    out.println("swal ('Gagal !', 'Gagal login!', 'error');");
-                    out.println("});");
-                    out.println("</script>");
+                Account a = aadao.getById(employee.getId());
+                if (BCrypt.checkpw(password, a.getPassword())){
+                    emdao.getById(account.getEmployee().getId());
                 }
+            } else {
+                out.println("<script src= 'https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.11.4/sweetalert2.all.js'> </script>");
+                out.println("<script src= 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>");
+                out.println("<script src= 'https://unpkg.com/sweetalert/dist/sweetalert.min.js'></script>");
+                out.println("<script>");
+                out.println("$(document).ready(function(){");
+                out.println("swal ('Gagal !', 'Gagal login!', 'error');");
+                out.println("});");
+                out.println("</script>");
+//                RequestDispatcher rd = request.getRequestDispatcher("login.jsp");
+//                rd.include(request, response);
             }
         } catch (Exception e) {
         }

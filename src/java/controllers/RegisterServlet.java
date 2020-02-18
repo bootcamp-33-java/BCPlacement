@@ -137,8 +137,7 @@ public class RegisterServlet extends HttpServlet {
             adao.saveOrDelete(account, false);
 
             //kirim email
-            sendMail(name, email, token);
-
+            JavaMailUtil.sendMail(email, "http://localhost:8084/Bootcamp_Placemennt/login.jsp?id="+token);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -181,41 +180,5 @@ public class RegisterServlet extends HttpServlet {
         return sb.toString();
     }
 
-    private void sendMail(String name, String email, String token) {
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", true);
-        props.put("mail.smtp.starttls.enable", true);
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("tutuswidiya@gmail.com", "duuatujuh27");
-            }
-        });
-        try {
-
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("tutuswidiya@gmail.com", false));
-
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-            message.setSubject("Activation Email");
-//            message.setSentDate(new Date());
-
-            MimeBodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setContent("Dear  " + name + " " + "<br>"
-                    + "<br>"
-                    + " ",
-                    "text/html");
-
-            Multipart multipart = new MimeMultipart();
-            multipart.addBodyPart(messageBodyPart);
-            message.setContent(multipart);
-            Transport.send(message);
-        } catch (MessagingException e) {
-        }
-    }
 
 }

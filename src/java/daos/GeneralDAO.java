@@ -32,6 +32,22 @@ public class GeneralDAO<T> {
         }
     }
     
+    public List<T> getAll(){
+        List<T> ts = new ArrayList<>();
+        session = this.sessionFactory.openSession();
+        transaction = session.beginTransaction();
+        try{
+            ts= session.createQuery("FROM "+ t.getClass().getSimpleName()+" Order By 1").list();
+            transaction.commit();
+        }catch(Exception e){
+            e.printStackTrace();
+            if (transaction !=null) {
+                transaction.rollback();
+            }
+        }
+        return ts;
+    }
+    
      public List<T> getData(Object key) {
         List<T> ts = new ArrayList<>();
         session = this.sessionFactory.openSession();

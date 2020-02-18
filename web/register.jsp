@@ -17,7 +17,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
         <title>Register</title>
 
         <!-- Custom fonts for this template-->
@@ -26,6 +27,7 @@
 
         <!-- Custom styles for this template-->
         <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
         <style>
             * {
                 box-sizing: border-box;
@@ -283,6 +285,7 @@
                                                     x[n].className += " active";
                                                 }
         </script>
+
     </body>
     <% }
         session.removeAttribute("batchs");

@@ -68,6 +68,10 @@ public class Request implements Serializable {
     public Request(Integer id) {
         this.id = id;
     }
+    public Request(Integer id, String step) {
+        this.id = id;
+        this.step = step;
+    }
     
     public Request(Integer id, Integer quantity, Date startDate, Date endDate, String note, Skill skill, UserSite userSite, String step) {
         this.id = id;
@@ -79,6 +83,8 @@ public class Request implements Serializable {
         this.skill = skill;
         this.step = step;
     }
+    
+    
 
     public Integer getId() {
         return id;

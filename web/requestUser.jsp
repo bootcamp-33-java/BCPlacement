@@ -21,6 +21,9 @@
         <meta name="author" content="">
         <title>Request User</title>
         <!-- Custom fonts for this template -->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
         <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
@@ -129,7 +132,7 @@
                         <!--<p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the <a target="_blank" href="https://datatables.net">official DataTables documentation</a>.</p>-->
 
                         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <form action="requestUser" method="POST">
+                            <form action="requestUser" method="POST" id="reques" >
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -139,7 +142,6 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
-
                                             <table border="0" >
                                                 <tbody>
                                                     <tr>
@@ -152,6 +154,7 @@
                                                             </select>
                                                         </td>
                                                     </tr>
+                                                    
                                                     <tr>
                                                         <td>Skill</td>
                                                         <td>
@@ -183,14 +186,14 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save </button>
+                                            <button name="modalForm" type="submit" class="btn btn-primary">Save </button>
                                         </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <form action="requestUser" method="POST">
+                            <form action="user" method="POST" id="users">
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
@@ -228,6 +231,7 @@
                                                                 <option  value="<%=site.getId()%>"><%=site.getName()%></option>
                                                                 <% }%>
                                                             </select>
+                                                            
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -235,7 +239,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-primary">Save </button>
+                                            <button name="modalForm" type="submit" class="btn btn-primary">Save </button>
                                         </div>
                                     </div>
                                 </div>
@@ -252,50 +256,51 @@
                                     Insert User
                                 </button> 
                             </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                        <thead>
-                                            <tr>
-                                                <th>No</th>
-                                                <th>Requester</th>
-                                                <th>Skill</th>
-                                                <th>Quantity</th>
-                                                <th>Start Date</th>
-                                                <th>End date</th>
-                                                <th>Note</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% int i = 1;
+                            <form action="requestUser" method="GET">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Requester</th>
+                                                    <th>Skill</th>
+                                                    <th>Quantity</th>
+                                                    <th>Start Date</th>
+                                                    <th>End date</th>
+                                                    <th>Note</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% int i = 1;
                                                 for (Request req : requests) {%>
-                                            <% try {
-                                                    if (req.getStep().equals("new")) {
+                                                <% try {
+                                                        if (req.getStep().equals("new")) {
 
-                                            %>
-                                            <tr>
-                                                <td><%= i++%></td>
-                                                <td><%= req.getUserSite().getName()%></td>
-                                                <td><%= req.getSkill().getName()%></td>
-                                                <td><%= req.getQuantity()%></td>
-                                                <td><%= req.getStartDate()%></td>
-                                                <td><%= req.getEndDate()%></td>
-                                                <td><%= req.getNote()%></td>
-                                                <td><a href="requestUser?action=cancel&id=<%=req.getId()%>&quantity=<%=req.getQuantity()%>&startDateReq=<%=req.getStartDate()%>
-                                                       &endDateReq=<%=req.getEndDate()%>&note=<%=req.getNote()%>&userSite=<%=req.getUserSite()%>&skill=<%=req.getSkill()%>" >
-                                                        <button type="button" class="btn btn-danger btn-sm">Interview</button></a></td>
-                                            </tr>
-                                            <% }
-                                                    } catch (Exception e) {
-                                                        e.printStackTrace();
+                                                %>
+                                                <tr>
+                                                    <td><%= i++%></td>
+                                                    <td><%= req.getUserSite().getName()%></td>
+                                                    <td><%= req.getSkill().getName()%></td>
+                                                    <td><%= req.getQuantity()%></td>
+                                                    <td><%= req.getStartDate()%></td>
+                                                    <td><%= req.getEndDate()%></td>
+                                                    <td><%= req.getNote()%></td>
+                                                    <td><a href="requestUser?action=next&id=<%=req.getId()%>">
+                                                            <button type="button" class="btn btn-danger btn-sm">Interview</button></a></td>
+                                                </tr>
+                                                <% }
+                                                        } catch (Exception e) {
+                                                            e.printStackTrace();
+                                                        }
                                                     }
-                                                }
-                                            %>
-                                        </tbody>
-                                    </table>
+                                                %>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
 
                     </div>
@@ -361,6 +366,8 @@
 
         <!-- Page level custom scripts -->
         <script src="js/demo/datatables-demo.js"></script>
+
+
 
     </body>
     <% }

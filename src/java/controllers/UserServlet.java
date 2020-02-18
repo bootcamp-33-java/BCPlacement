@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import models.Employee;
-import models.Interview;
-import models.SkillSet;
 import models.Request;
 import models.Site;
 import models.Skill;
@@ -29,17 +27,14 @@ import tools.HibernateUtil;
  *
  * @author Tutus W
  */
-@WebServlet(name = "AppointmentServlet", urlPatterns = {"/appointment"})
-public class AppointmentServlet extends HttpServlet {
+@WebServlet(name = "UserServlet", urlPatterns = {"/user"})
+public class UserServlet extends HttpServlet {
 
     private final GeneralDAO<Skill> skdao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Skill.class);
     private final GeneralDAO<Site> sidao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Site.class);
     private final GeneralDAO<UserSite> usdao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), UserSite.class);
     private final GeneralDAO<Request> rdao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Request.class);
-//    private final GeneralDAO<Employee> edao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Employee.class);
-    private final GeneralDAO<SkillSet> ssdao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), SkillSet.class);
-    private final GeneralDAO<Interview> indao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Interview.class);
-
+    private final GeneralDAO<Employee> edao = new GeneralDAO<>(HibernateUtil.getSessionFactory(), Employee.class);
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -53,14 +48,13 @@ public class AppointmentServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.getSession().setAttribute("skills", skdao.getData(null));
-            request.getSession().setAttribute("sites", sidao.getData(null));
-            request.getSession().setAttribute("userSites", usdao.getData(null)); // membuat nama session untuk servlet register
-            request.getSession().setAttribute("requests", rdao.getData(null)); // membuat nama session untuk servlet register
-//            request.getSession().setAttribute("employees", edao.getData(null)); // membuat nama session untuk servlet register
-            request.getSession().setAttribute("skillSets", ssdao.getData(null)); // membuat nama session untuk servlet register
+               request.getSession().setAttribute("userSites", usdao.getData(null));
+            request.getSession().setAttribute("skills", skdao.getAll());
+            request.getSession().setAttribute("sites", sidao.getAll()); // membuat nama session untuk servlet register
+            request.getSession().setAttribute("requests", rdao.getAll()); // membuat nama session untuk servlet register
+            request.getSession().setAttribute("employees", edao.getAll()); // membuat nama session untuk servlet register
 //            request.getSession().setAttribute("studyClasss", bdao.getData(null));
-            RequestDispatcher rd = request.getRequestDispatcher("interviewAppointment.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("requestUser.jsp");
             rd.include(request, response);
         }
     }
@@ -91,26 +85,29 @@ public class AppointmentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+         String action = request.getParameter("action");
         String id = request.getParameter("id");
-        String idUser = request.getParameter("idUser");
         String name = request.getParameter("name");
-//        String nameUserSite = request.getParameter("nameUserSite");
         String site = request.getParameter("site");
+        String project = request.getParameter("project");
+        String division = request.getParameter("division");
+        String team = request.getParameter("team");
+        String quantity = request.getParameter("quantity");
+        String startDateReq = request.getParameter("startDateReq");
+        String endDateReq = request.getParameter("endDateReq");
+        String note = request.getParameter("note");
         String userSite = request.getParameter("userSite");
-        String skillSet = request.getParameter("skillSets");
-        String interviewDate = request.getParameter("interviewDate");
-        String interviewer = request.getParameter("interviewer");
+        String skill = request.getParameter("skill");
+        String step = request.getParameter("step");
 
 //        Skill skill1 = new Skill(id, name);
 //        skdao.saveOrDelete(skill1, false);
-        try {
-            SimpleDateFormat simple = new SimpleDateFormat("dd/mm/yyyy");
-//        Interview interview = new Interview(Integer.parseInt(id), interviewer, simple.parse(interviewDate), new UserSite(Integer.parseInt(userSite)));
-//        indao.saveOrDelete(interview, false);
-            indao.saveOrDelete(new Interview(0, interviewer, simple.parse(interviewDate), new UserSite(Integer.parseInt(userSite))), false);
-        } catch (Exception e) {
+//        if (request.getParameter(action) == null) {
 
-        }
+            //            if ("exampleModal2".equals(action)) {
+                usdao.saveOrDelete(new UserSite(0, name, project, division, team, new Site(Integer.parseInt(site))), false);
+//}
+//        }
         processRequest(request, response);
     }
 

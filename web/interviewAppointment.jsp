@@ -32,6 +32,16 @@
 
         <!-- Custom styles for this page -->
         <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+        <!--CDN Select2-->
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.4.0.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
     </head>
     <% // //script plate
         if (session.getAttribute("skills") == null || session.getAttribute("userSites") == null
@@ -222,52 +232,62 @@
                 </div>
             </div>
         </div>
-
         <div class="modal fade" id="interviewModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Ready to Choose Assigned?</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <table border="0" >
-                            <tbody>
-                                <tr>
-                                    <td>Chose Assigment</td>
-                                    <td>
-                                        <select class="form-control" onchange="checkDuplicates"  id="skillSet" name="skillSet">
+            <form action="appointment" method="POST">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Ready to Choose Assigned?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table border="0" >
+                                <tbody>
+                                    <tr>
+                                        <td>Choose Assigment</td>
+                                        <td>
+                                            <select class="form-control js-example-basic-multiple" onchange="checkDuplicates"  id="skillSet" name="id">
 
-                                            <% for (SkillSet ss : skillSets) {%>
-                                            <option  value="<%=ss.getEmployee().getId()%><%=ss.getEmployee().getName()%>"</option>
-                                            <% }%>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Date</td>
-                                    <td><input type="date" class="form-control" name="date" value="" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Interview With</td>
-                                    <td><input type="text" class="form-control" name="division" value="" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Time</td>
-                                    <td><input type="text" class="form-control" name="team" value="" /></td>
-                                </tr>
+                                                <% for (SkillSet ss : skillSets) {%>
+                                                <option value="<%=ss.getEmployee().getId()%>"><%=ss.getSkill().getName() + "  -  " + ss.getEmployee().getName()%></option>
+                                                <% }%>
+                                            </select>
+                                        </td>
 
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-primary" href="#">Submit</a>
+                                    </tr>
+                                    <tr>
+                                        <td>User :</td>
+                                        <td>
+                                            <select class="form-control js-example-basic-multiple" onchange="checkDuplicates"  id="skillSet" name="userSite">
+
+                                                <% for (UserSite us : userSites) {%>
+                                                <option value="<%=us.getId()%>"><%=us.getName()%></option>
+                                                <% }%>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date</td>
+                                        <td><input type="datetime-local" class="form-control" name="interviewDate" value="" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Interview With</td>
+                                        <td><input type="text" class="form-control" name="interviewer" value="" /></td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                            <!--<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                            <button name="modalForm" type="submit" class="btn btn-primary">Save </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
 
         <!-- Bootstrap core JavaScript-->
@@ -286,6 +306,13 @@
 
         <!-- Page level custom scripts -->
         <script src="js/demo/datatables-demo.js"></script>
+
+        <script>
+                                                $(document).ready(function () {
+                                                    $('.js-example-basic-multiple').select2();
+                                                });
+        </script>
+
 
     </body>
     <% }

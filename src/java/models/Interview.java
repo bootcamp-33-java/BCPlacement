@@ -35,8 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Interview.findAll", query = "SELECT i FROM Interview i")
     , @NamedQuery(name = "Interview.findById", query = "SELECT i FROM Interview i WHERE i.id = :id")
     , @NamedQuery(name = "Interview.findByInterviewer", query = "SELECT i FROM Interview i WHERE i.interviewer = :interviewer")
-    , @NamedQuery(name = "Interview.findByInterviewDate", query = "SELECT i FROM Interview i WHERE i.interviewDate = :interviewDate")
-    , @NamedQuery(name = "Interview.findByTime", query = "SELECT i FROM Interview i WHERE i.time = :time")})
+    , @NamedQuery(name = "Interview.findByInterviewDate", query = "SELECT i FROM Interview i WHERE i.interviewDate = :interviewDate")})
 public class Interview implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -49,9 +48,6 @@ public class Interview implements Serializable {
     @Column(name = "INTERVIEW_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date interviewDate;
-    @Column(name = "TIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date time;
     @OneToMany(mappedBy = "interview", fetch = FetchType.LAZY)
     private List<EmployeeInterview> employeeInterviewList;
     @JoinColumn(name = "USER_SITE", referencedColumnName = "ID")
@@ -63,6 +59,13 @@ public class Interview implements Serializable {
 
     public Interview(Integer id) {
         this.id = id;
+    }
+    
+    public Interview(Integer id, String interviewer, Date interviewDate, UserSite userSite) {
+        this.id = id;
+        this.interviewer = interviewer;
+        this.interviewDate = interviewDate;
+        this.userSite = userSite;
     }
 
     public Integer getId() {
@@ -89,13 +92,6 @@ public class Interview implements Serializable {
         this.interviewDate = interviewDate;
     }
 
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
 
     @XmlTransient
     public List<EmployeeInterview> getEmployeeInterviewList() {

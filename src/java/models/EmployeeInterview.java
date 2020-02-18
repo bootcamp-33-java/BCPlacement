@@ -35,6 +35,9 @@ public class EmployeeInterview implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    @Basic(optional = false)
+    @Column(name = "RESULT")
+    private String result;
     @JoinColumn(name = "EMPLOYEE", referencedColumnName = "ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Employee employee;
@@ -55,6 +58,13 @@ public class EmployeeInterview implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public Employee getEmployee() {
@@ -97,5 +107,5 @@ public class EmployeeInterview implements Serializable {
     public String toString() {
         return "models.EmployeeInterview[ id=" + id + " ]";
     }
-    
+
 }

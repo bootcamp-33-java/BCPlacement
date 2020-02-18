@@ -49,11 +49,11 @@ public class RequestServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            request.getSession().setAttribute("skills", skdao.getData(null));
-            request.getSession().setAttribute("sites", sidao.getData(null));
-            request.getSession().setAttribute("userSites", usdao.getData(null)); // membuat nama session untuk servlet register
+            request.getSession().setAttribute("userSites", usdao.getData(null));
+            request.getSession().setAttribute("skills", skdao.getAll());
+            request.getSession().setAttribute("sites", sidao.getAll()); // membuat nama session untuk servlet register
             request.getSession().setAttribute("requests", rdao.getData(null)); // membuat nama session untuk servlet register
-            request.getSession().setAttribute("employees", edao.getData(null)); // membuat nama session untuk servlet register
+            request.getSession().setAttribute("employees", edao.getAll()); // membuat nama session untuk servlet register
 //            request.getSession().setAttribute("studyClasss", bdao.getData(null));
             RequestDispatcher rd = request.getRequestDispatcher("requestUser.jsp");
             rd.include(request, response);
@@ -73,36 +73,23 @@ public class RequestServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String id = request.getParameter("id");
-        String idUser = request.getParameter("idUser");
-        String name = request.getParameter("name");
-//        String nameUserSite = request.getParameter("nameUserSite");
-        String site = request.getParameter("site");
-        String project = request.getParameter("project");
-        String division = request.getParameter("division");
-        String team = request.getParameter("team");
-        String quantity = request.getParameter("quantity");
-        String startDateReq = request.getParameter("startDateReq");
-        String endDateReq = request.getParameter("endDateReq");
-        String note = request.getParameter("note");
-        String userSite = request.getParameter("userSite");
-        String skill = request.getParameter("skill");
-        String step = request.getParameter("step");
         String action = request.getParameter("action");
-
+        String id = request.getParameter("id");
+        
         if (request.getParameter("action") != null) {
             if (request.getParameter("action").equals("next")) {
-                try {
-                    SimpleDateFormat simple = new SimpleDateFormat("dd/mm/yyyy");
-                    Request req = new Request(Integer.parseInt(request.getParameter("id")), Integer.parseInt(request.getParameter("quantity")),
-                            Date.valueOf(request.getParameter("startDateReq")), Date.valueOf(request.getParameter("endDateReq")),
-                            request.getParameter("note"), new Skill(request.getParameter("skill")), new UserSite(Integer.parseInt(request.getParameter("userSite"))), "interview");
-                    rdao.saveOrDelete(req, false);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                Request req = rdao.getById(request.getParameter("id"));
+                rdao.saveOrDelete(new Request(req.getId(), req.getQuantity(), req.getStartDate(), req.getEndDate(), req.getNote(), new Skill(req.getSkill().getId()), new UserSite(req.getUserSite().getId()), "interview"), false);
             }
         }
+
+//            if (request.getParameter("action") != null && request.getParameter("id") != null) {
+//                if (request.getParameter("action").equals("next")) {
+//                    Request req = rdao.getById(request.getParameter("id"));
+//                request.getSession().setAttribute("request", req);
+//                }
+//        }
+
         processRequest(request, response);
     }
 
@@ -117,8 +104,8 @@ public class RequestServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String action = request.getParameter("action");
         String id = request.getParameter("id");
-        String idUser = request.getParameter("idUser");
         String name = request.getParameter("name");
         String site = request.getParameter("site");
         String project = request.getParameter("project");
@@ -134,26 +121,9 @@ public class RequestServlet extends HttpServlet {
 
 //        Skill skill1 = new Skill(id, name);
 //        skdao.saveOrDelete(skill1, false);
-        try {
-            SimpleDateFormat simple = new SimpleDateFormat("dd/mm/yyyy");
+        rdao.saveOrDelete(new Request(0, Integer.parseInt(quantity), Date.valueOf(startDateReq), Date.valueOf(endDateReq),
+                note, new Skill(skill), new UserSite(Integer.parseInt(userSite)), "new"), false);
 
-//            Request req = new Request(Integer.parseInt("0"), Integer.parseInt(quantity), Date.valueOf(startDateReq), Date.valueOf(endDateReq), note, new Skill(skill), new UserSite(Integer.parseInt(userSite)), step);
-//                Request req = new Request(Integer.parseInt("id"),Integer.parseInt("quantity"),simple.parse("startDateReq"), simple.parse("endDateReq"), "note",  
-//                        new Skill(skill), new UserSite(Integer.parseInt(userSite)), "step");
-    ////            new Request(0,2,simple.parse("12/12/2011"), simple.parse("12/12/2012"), "butuh ceoat",  new Skill("IT_JS"), new UserSite(1), "new")
-//                rdao.saveOrDelete(req, false);
-            rdao.saveOrDelete(new Request(0,Integer.parseInt(id),simple.parse(startDateReq), simple.parse(endDateReq), note,  new Skill(skill), new UserSite(Integer.parseInt(userSite)), step), false);
-//            UserSite user = new UserSite(0, name, project, division, team, new Site(Integer.parseInt(site)));
-            usdao.saveOrDelete(new UserSite(0, name, project, division, team, new Site(Integer.parseInt(site))), false);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-//                    UserSite user = new UserSite(0, name, project, division, team, new Site(Integer.parseInt(site)));
-//            usdao.saveOrDelete(user, false);
-
-//        UserSite us = new UserSite(Integer.parseInt(id), nameUserSite, project, division, team);
-//        usdao.saveOrDelete(us, false);
         processRequest(request, response);
     }
 

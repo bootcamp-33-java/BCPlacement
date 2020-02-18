@@ -287,8 +287,9 @@
                                                     <td><%= req.getStartDate()%></td>
                                                     <td><%= req.getEndDate()%></td>
                                                     <td><%= req.getNote()%></td>
-                                                    <td><a href="requestUser?action=next&id=<%=req.getId()%>">
-                                                            <button type="button" class="btn btn-danger btn-sm">Interview</button></a></td>
+                                                     <td><a href="requestUser?action=next&id=<%=req.getId()%>&quantity=<%=req.getQuantity() %>&startDateReq=<%=req.getStartDate() %>
+                                                       &endDateReq=<%=req.getEndDate() %>&note=<%=req.getNote() %>&userSite=<%=req.getUserSite() %>&skill=<%=req.getSkill() %>" >
+                                                        <button type="button" class="btn btn-danger btn-sm">Interview</button></a></td>
                                                 </tr>
                                                 <% }
                                                         } catch (Exception e) {

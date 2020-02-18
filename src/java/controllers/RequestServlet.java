@@ -75,13 +75,13 @@ public class RequestServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         String id = request.getParameter("id");
-        
-        if (request.getParameter("action") != null) {
-            if (request.getParameter("action").equals("next")) {
-                Request req = rdao.getById(request.getParameter("id"));
-                rdao.saveOrDelete(new Request(req.getId(), req.getQuantity(), req.getStartDate(), req.getEndDate(), req.getNote(), new Skill(req.getSkill().getId()), new UserSite(req.getUserSite().getId()), "interview"), false);
-            }
-        }
+//        
+//        if (request.getParameter("action") != null) {
+//            if (request.getParameter("action").equals("next")) {
+//                Request req = rdao.getById(request.getParameter("id"));
+//                rdao.saveOrDelete(new Request(req.getId(), req.getQuantity(), req.getStartDate(), req.getEndDate(), req.getNote(), new Skill(req.getSkill().getId()), new UserSite(req.getUserSite().getId()), "interview"), false);
+//            }
+//        }
 
 //            if (request.getParameter("action") != null && request.getParameter("id") != null) {
 //                if (request.getParameter("action").equals("next")) {
@@ -124,6 +124,25 @@ public class RequestServlet extends HttpServlet {
         rdao.saveOrDelete(new Request(0, Integer.parseInt(quantity), Date.valueOf(startDateReq), Date.valueOf(endDateReq),
                 note, new Skill(skill), new UserSite(Integer.parseInt(userSite)), "new"), false);
 
+        
+        if (request.getParameter("action") != null) {
+            if (request.getParameter("action").equals("next")) {
+//                         Request req = new Request(Integer.parseInt(request.getParameter("id")),"interview");
+//                         rdao.saveOrDelete(req, false);
+                try {
+                    SimpleDateFormat simple = new SimpleDateFormat("dd/mm/yyyy");
+//                    rdao.saveOrDelete(new Request(Integer.parseInt(request.getParameter("id")), Integer.parseInt(request.getParameter("quantity")),
+//                            Date.valueOf(request.getParameter("startDateReq")), Date.valueOf(request.getParameter("endDateReq")),
+//                            request.getParameter("note"), new Skill(request.getParameter("skill")), new UserSite(Integer.parseInt(request.getParameter("userSite"))), "interview"), false);
+////                    rdao.saveOrDelete(req, false);
+                      Request req = new Request(Integer.parseInt(id), Integer.parseInt(quantity), simple.parse(startDateReq),
+                              simple.parse(endDateReq), note, new Skill(skill), new UserSite(Integer.parseInt(userSite)), "interview");
+                      rdao.saveOrDelete(req, false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         processRequest(request, response);
     }
 

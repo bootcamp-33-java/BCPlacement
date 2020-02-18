@@ -51,6 +51,13 @@ public class EmployeeInterview implements Serializable {
     public EmployeeInterview(Integer id) {
         this.id = id;
     }
+    
+    public EmployeeInterview(Integer id, Employee employee, Interview interview, String result) {
+        this.id = id;
+        this.employee = employee;
+        this.interview = interview;
+        this.result = result;
+    }
 
     public Integer getId() {
         return id;

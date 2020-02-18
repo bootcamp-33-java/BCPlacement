@@ -12,6 +12,7 @@ import java.util.List;
 import models.Account;
 import models.Batch;
 import models.Employee;
+import models.EmployeeInterview;
 import models.Interview;
 import models.Request;
 import models.Site;
@@ -38,15 +39,17 @@ public class ManualTestGeneral {
         GeneralDAO<Request> rdao = new GeneralDAO<>(sessionFactory, Request.class);
         GeneralDAO<Skill> sdao = new GeneralDAO<>(sessionFactory, Skill.class);
         GeneralDAO<Interview> indao = new GeneralDAO<>(sessionFactory, Interview.class);
+        GeneralDAO<EmployeeInterview> eidao = new GeneralDAO<>(sessionFactory, EmployeeInterview.class);
 //
-        try {
-            SimpleDateFormat simple = new SimpleDateFormat("dd/mm/yyyy");
-        indao.saveOrDelete(new Interview(0, "ADY", simple.parse("12/12/2012"), new UserSite(2)), false);
-        }catch(Exception e ){
-            
-        }
-     
-////
+//        try {
+//            SimpleDateFormat simple = new SimpleDateFormat("dd/mm/yyyy");
+//        indao.saveOrDelete(new Interview(0, "Gugun", simple.parse("12/12/2019"), new UserSite(2)), false);
+//        }catch(Exception e ){
+//            
+//        }
+
+            System.out.println(eidao.saveOrDelete(new EmployeeInterview(0, new Employee("16152"), new Interview(8), "PENDING"), false));
+
 //        for (Employee t : edao.getData(null)) {
 //            System.out.print(t.getId() + "  | ");
 //            System.out.println(t.getName() + " | ");
